@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        window.addEventListener("load", function () {
+            let options = {
+                root: null,
+                rootMargin: '0px',
+                threshold: [0.0]
+            }
+            let observer = new IntersectionObserver(function (entries, observer) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+
+                        document.querySelector(entry.target.dataset['target']).classList.remove('show');
+                    } else {
+                        document.querySelector(entry.target.dataset['target']).classList.add('show');
+                    }
+                    document.querySelector(entry.target.dataset['target']).style.transition = 'width 200ms';
+                });
+            }, options);
+
+            observer.observe(document.querySelector('[data-observe="buttonObserve"]'));
+        });
+    </script>
+    <style>
+        #flexbox {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+
+        #Top {
+            z-index: 1020;
+            position: sticky;
+            position: -webkit-sticky;
+            top: 0;
+            height: 100px;
+            background-color: chocolate;
+        }
+
+        #Middle {
+            height: 3000px;
+            background-color: bisque;
+        }
+
+        #Bottom {
+            z-index: 1019;
+            position: sticky;
+            position: -webkit-sticky;
+            align-self: center;
+            bottom: 0;
+            width: 200px;
+            height: 100px;
+            background-color: aqua;
+        }
+
+        #Bottom.show {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="flexbox">
+        <div id="Top" class=""></div>
+        <div id="Middle" class=""></div>
+        <div id="Bottom" class="">Button</div>
+        <div id="observer" data-observe="buttonObserve" data-target="#Bottom"
+            style="height: 10px; background-color: darkslategray;">
+        </div>
+        <div id="Middle" class=""></div>
+    </div>
+</body>
+
+</html>
