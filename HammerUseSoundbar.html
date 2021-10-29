@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"
+        integrity="sha512-UXumZrZNiOwnTcZSHLOfcTs0aos2MzBWHXOHOuB0J/R44QB0dwY5JgfbvljXcklVf65Gc4El6RjZ+lnwd2az2g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    </script>
+    <style>
+        .box {
+            position: relative;
+            width: 200px;
+            height: 30px;
+            border: 1px solid black;
+            transition: all 0.1s;
+        }
+
+        .left-box {
+            position: relative;
+            z-index: 5;
+            width: 50%;
+            height: 30px;
+            float: left;
+        }
+
+        .right-box {
+            position: relative;
+            z-index: 5;
+            width: 50%;
+            height: 30px;
+            float: right;
+        }
+
+        .circle {
+            position: absolute;
+            top: 9.5px;
+            left: 5px;
+            z-index: 3;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ff4c4f;
+            transition: left 0.5s;
+            transition-timing-function: ease-out;
+        }
+
+        .line {
+            position: absolute;
+            top: 15px;
+            left: 10px;
+            width: 180px;
+            height: 1px;
+            background: linear-gradient(to right, #ff4c4c, #b690ff);
+        }
+
+        .box-vol {
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="left-box"></div>
+        <div class="right-box"></div>
+        <div class="circle"></div>
+        <div class="line"></div>
+    </div>
+    <h4 class="box-vol">
+        Volume :
+        <span>0</span>
+    </h4>
+    <script>
+        var box = $('.box');
+        // 1. 박스 우측 드래그 감지
+        var element = document.querySelector('.right-box');
+        var rightBox = new Hammer(element);
+        rightBox.get('pan').set({
+            direction: Hammer.DIRECTION_ALL
+        });
+
+        rightBox.on('pandown', function (e) {
+            console.log(e.deltaY);
+            // 2. 박스가 우측으로 회전
+            box.css('transform-origin', 'left top');
+            box.css('transform', `rotate(${e.deltaY/10}deg)`);
+            // 3. 동그라미가 우측으로 이동
+            var leftValue = parseFloat($('.circle').css('left').slice(0, -2));
+            if ((leftValue + e.deltaY / 2) < 180) {
+                $('.circle').css('left', '+=' + e.deltaY / 2);
+            }
+        });
+
+        // 5. 박스를 원래대로 복구
+        rightBox.on('panend', function (e) {
+            $('.box').css('transform', 'rotate(0deg)');
+        });
+    </script>
+</body>
+
+</html>
